@@ -37,13 +37,13 @@ public class LicenseService {
     return responseMessage;
   }
 
-  public String updateLicense(License license, String organizationId, Locale locale) {
+  public String updateLicense(License license, String organizationId) {
     String responseMessage = null;
     if (license != null) {
       license.setOrganizationId(organizationId);
       responseMessage =
           String.format(
-              messages.getMessage("license.update.message", null, locale), license.toString());
+              messages.getMessage("license.update.message", null, null), license.toString());
     }
     return responseMessage;
   }
