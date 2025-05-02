@@ -1,22 +1,30 @@
 package com.optimagrowth.license.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import org.springframework.hateoas.RepresentationModel;
 
+@Entity
+@Table(name = "licenses")
 public class License extends RepresentationModel<License> {
-  private int id;
+  @Id
+  @Column(name = "license_id", nullable = false)
   private String licenseId;
+
   private String description;
+
+  @Column(name = "organization_id", nullable = false)
   private String organizationId;
+
+  @Column(name = "product_name", nullable = false)
   private String productName;
+
+  @Column(name = "license_type", nullable = false)
   private String licenseType;
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
+  private String comment;
 
   public String getLicenseId() {
     return licenseId;
@@ -58,12 +66,23 @@ public class License extends RepresentationModel<License> {
     this.licenseType = licenseType;
   }
 
+  public String getComment() {
+    return comment;
+  }
+
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
+
+  public License withComment(String comment) {
+    this.setComment(comment);
+    return this;
+  }
+
   @Override
   public String toString() {
     return "License{"
-        + "id="
-        + id
-        + ", licenseId='"
+        + "licenseId='"
         + licenseId
         + '\''
         + ", description='"
@@ -77,6 +96,9 @@ public class License extends RepresentationModel<License> {
         + '\''
         + ", licenseType='"
         + licenseType
+        + '\''
+        + ", comment='"
+        + comment
         + '\''
         + '}';
   }
