@@ -28,3 +28,15 @@ resilence4j:
         ringBufferSizeInHalfOpenState: 4
         waitDurationInOpenState: 20s
         failureRateThreshold: 60
+  bulkhead:
+    instances:
+      bulkheadLicenseService:
+        maxWaitDuration: 10ms
+        maxConcurrentCalls: 20
+  thread-pool-bulkhead:
+    instances:
+      bulkheadLicenseService:
+        maxThreadPoolSize: 1
+        coreThreadPoolSize: 1
+        queueCapacity: 1
+        keepAliveDuration: 20ms
