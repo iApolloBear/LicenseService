@@ -127,7 +127,8 @@ public class LicenseService {
   }
 
   @CircuitBreaker(name = "licenseService")
-  public List<License> getLicensesByOrganization(String organizationId) {
+  public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
+    this.randomlyRunLong();
     return this.licenseRepository.findByOrganizationId(organizationId);
   }
 }
