@@ -7,9 +7,11 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplate;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -101,5 +103,10 @@ public class LicenseService {
     responseMessage =
         String.format(messages.getMessage("license.delete.message", null, null), licenseId);
     return responseMessage;
+  }
+
+  @CircuitBreaker(name = "licenseService")
+  public List<License> getLicensesByOrganization(String organizationId) {
+    return this.licenseRepository.findByOrganizationId(organizationId);
   }
 }
