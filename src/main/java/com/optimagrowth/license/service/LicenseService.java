@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -126,9 +127,19 @@ public class LicenseService {
     }
   }
 
-  @CircuitBreaker(name = "licenseService")
+  @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
   public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
     this.randomlyRunLong();
     return this.licenseRepository.findByOrganizationId(organizationId);
+  }
+
+  private List<License> buildFallbackLicenseList(String organizationId, Throwable t) {
+    List<License> fallbackList = new ArrayList<>();
+    License license = new License();
+    license.setLicenseId("0000000-00-00000");
+    license.setOrganizationId(organizationId);
+    license.setProductName("Sorry no licensing information currently available");
+    fallbackList.add(license);
+    return fallbackList;
   }
 }
