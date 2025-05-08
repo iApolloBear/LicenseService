@@ -132,13 +132,10 @@ public class LicenseService {
     }
   }
 
-//  @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+  @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
   @RateLimiter(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
   @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
-  @Bulkhead(
-      name = "bulkheadLicenseService",
-      type = Bulkhead.Type.THREADPOOL,
-      fallbackMethod = "buildFallbackLicenseList")
+  @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")
   public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
     logger.debug(
         "getLicensesByOrganization Correlation id: {}",
