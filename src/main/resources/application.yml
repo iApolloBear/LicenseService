@@ -8,7 +8,7 @@ spring:
       uri: http://localhost:8071
   config:
     import: "configserver:"
-resilence4j:
+resilience4j:
   circuitbreaker:
     instances:
       licenseService:
@@ -31,7 +31,7 @@ resilence4j:
   bulkhead:
     instances:
       bulkheadLicenseService:
-        maxWaitDuration: 10ms
+        maxWaitDuration: 2ms
         maxConcurrentCalls: 20
   thread-pool-bulkhead:
     instances:
@@ -39,7 +39,6 @@ resilence4j:
         maxThreadPoolSize: 1
         coreThreadPoolSize: 1
         queueCapacity: 1
-        keepAliveDuration: 20ms
   retry:
     instances:
       retryLicenseService:
@@ -53,3 +52,7 @@ resilence4j:
         timeoutDuration: 1000ms
         limitRefreshPeriod: 5000
         limitForPeriod: 5
+logging:
+  level:
+    org.springframework.web: WARN
+    com.optimagrowth: DEBUG
