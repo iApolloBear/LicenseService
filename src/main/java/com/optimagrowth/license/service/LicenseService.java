@@ -9,6 +9,7 @@ import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplate;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,6 +131,7 @@ public class LicenseService {
   }
 
   @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+  @RateLimiter(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
   @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
   @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "bulkheadLicenseService")
   public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
