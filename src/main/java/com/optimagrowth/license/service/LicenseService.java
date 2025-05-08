@@ -7,6 +7,7 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplate;
+import com.optimagrowth.license.utils.UserContextHolder;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
@@ -117,12 +118,13 @@ public class LicenseService {
 
   private void randomlyRunLong() throws TimeoutException {
     Random rand = new Random();
-    int randomNum = rand.nextInt(3) + 1;
+    int randomNum = rand.nextInt((3 - 1) + 1) + 1;
     if (randomNum == 3) sleep();
   }
 
   private void sleep() throws TimeoutException {
     try {
+      System.out.println("Sleep");
       Thread.sleep(5000);
       throw new java.util.concurrent.TimeoutException();
     } catch (InterruptedException e) {
@@ -130,11 +132,17 @@ public class LicenseService {
     }
   }
 
-  @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+//  @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
   @RateLimiter(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
   @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
-  @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "bulkheadLicenseService")
+  @Bulkhead(
+      name = "bulkheadLicenseService",
+      type = Bulkhead.Type.THREADPOOL,
+      fallbackMethod = "buildFallbackLicenseList")
   public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
+    logger.debug(
+        "getLicensesByOrganization Correlation id: {}",
+        UserContextHolder.getContext().getCorrelationId());
     this.randomlyRunLong();
     return this.licenseRepository.findByOrganizationId(organizationId);
   }
