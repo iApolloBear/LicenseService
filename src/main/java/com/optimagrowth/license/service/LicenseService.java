@@ -52,7 +52,7 @@ public class LicenseService {
   public License getLicense(String licenseId, String organizationId, String clientType) {
     License license =
         this.licenseRepository
-            .findByOrganizationIdAndLicenseId(licenseId, organizationId)
+            .findByOrganizationIdAndLicenseId(organizationId, licenseId)
             .orElseThrow(
                 () ->
                     new IllegalArgumentException(
