@@ -1,5 +1,6 @@
 package com.optimagrowth.license;
 
+import com.optimagrowth.license.utils.JwtInterceptor;
 import com.optimagrowth.license.utils.UserContextInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -48,6 +49,7 @@ public class LicenseServiceApplication {
     RestTemplate template = new RestTemplate();
     List<ClientHttpRequestInterceptor> interceptors = template.getInterceptors();
     interceptors.add(new UserContextInterceptor());
+    interceptors.add(new JwtInterceptor());
     template.setInterceptors(interceptors);
     return template;
   }
